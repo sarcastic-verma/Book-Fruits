@@ -23,6 +23,23 @@ app.use((req, res, next) => {
     throw new RequestError('Could not find this route.', 404);
 });
 
+// Error Handling
+app.use((error, req, res, next) => {
+    if (req.file) {
+        fs.unlink(req.file.path, err => {
+            console.log(err);
+        });
+    }
+    if (res.headersSent) {
+        return next(error);
+    }
+    res.status(error.code || 500);
+    res.json({
+        "status": "failed",
+        "message": error.message || 'An unknown error occurred!'
+    });
+});
+
 mongoose
     .connect(
         `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-dhan1.gcp.mongodb.net/${process.env.DB_Name}`, {
