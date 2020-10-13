@@ -10,7 +10,7 @@ router.get('/get/:bookId', bookController.getBookById);
 router.post('/add', [
     body('name').not().isEmpty(),
     body('author').not().isEmpty(),
-    body('readers').not().isEmpty(),
+    body('numberOfReaders').not().isEmpty(),
 ], bookController.addBook);
 
 module.exports = router;
